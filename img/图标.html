@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ID Card Reader Icon</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px;
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .icon-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        canvas {
+            margin: 10px;
+            border: 1px solid #eee;
+        }
+
+        .download-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: #00A251;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="icon-container">
+        <h3>16x16</h3>
+        <canvas id="canvas16" width="16" height="16"></canvas>
+        <br>
+        <button class="download-btn" onclick="downloadCanvas('canvas16', 16)">下载</button>
+    </div>
+
+    <div class="icon-container">
+        <h3>32x32</h3>
+        <canvas id="canvas32" width="32" height="32"></canvas>
+        <br>
+        <button class="download-btn" onclick="downloadCanvas('canvas32', 32)">下载</button>
+    </div>
+
+    <div class="icon-container">
+        <h3>48x48</h3>
+        <canvas id="canvas48" width="48" height="48"></canvas>
+        <br>
+        <button class="download-btn" onclick="downloadCanvas('canvas48', 48)">下载</button>
+    </div>
+
+    <div class="icon-container">
+        <h3>256x256</h3>
+        <canvas id="canvas256" width="256" height="256"></canvas>
+        <br>
+        <button class="download-btn" onclick="downloadCanvas('canvas256', 256)">下载</button>
+    </div>
+
+    <script>
+        function drawIcon(ctx, size) {
+            // 清空画布
+            ctx.clearRect(0, 0, size, size);
+            
+            // 绘制背景
+            ctx.fillStyle = '#00A251';
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, size * 0.125);
+            ctx.fill();
+            
+            // 绘制卡片
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.roundRect(size * 0.125, size * 0.25, size * 0.75, size * 0.5, size * 0.05);
+            ctx.fill();
+            
+            // 绘制芯片
+            ctx.fillStyle = '#FFD700';
+            ctx.fillRect(size * 0.25, size * 0.375, size * 0.25, size * 0.1875);
+            
+            // 绘制文字线条
+            ctx.fillStyle = '#666';
+            ctx.fillRect(size * 0.5625, size * 0.375, size * 0.1875, size * 0.0625);
+            ctx.fillRect(size * 0.5625, size * 0.5, size * 0.1875, size * 0.0625);
+        }
+
+        function downloadCanvas(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // 绘制图标
+            drawIcon(ctx, size);
+            
+            // 创建下载链接
+            const link = document.createElement('a');
+            link.download = `idcard_reader_${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 页面加载时绘制所有尺寸的图标
+        window.onload = function() {
+            [16, 32, 48, 256].forEach(size => {
+                const canvas = document.getElementById(`canvas${size}`);
+                const ctx = canvas.getContext('2d');
+                drawIcon(ctx, size);
+            });
+        }
+    </script>
+</body>
+</html>
